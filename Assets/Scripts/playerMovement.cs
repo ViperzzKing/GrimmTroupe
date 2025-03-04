@@ -6,7 +6,8 @@ using UnityEngine;
 public class playerMovement : MonoBehaviour
 {
 
-    private float Move;
+    private float MoveX;
+    private float MoveY;
 
     public Rigidbody2D rb;
 
@@ -34,13 +35,14 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move = Input.GetAxis("Horizontal");
+        MoveX = Input.GetAxis("Horizontal");
+        MoveY = Input.GetAxis("Vertical");
 
-        rb.linearVelocity = new Vector2(speed * Move, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(MoveX * speed, rb.linearVelocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.AddForce(new Vector2(rb.linearVelocity.x, jumpHeight));
+            rb.AddForce(new Vector2(rb.linearVelocity.x, jumpHeight * Time.deltaTime));
         }
     }
 
