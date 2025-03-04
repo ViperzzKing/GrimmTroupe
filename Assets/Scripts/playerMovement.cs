@@ -7,7 +7,6 @@ public class playerMovement : MonoBehaviour
 {
 
     private float MoveX;
-    private float MoveY;
 
     public Rigidbody2D rb;
 
@@ -16,15 +15,6 @@ public class playerMovement : MonoBehaviour
 
     [Tooltip("Changes the distance the player jumps")]
     public float jumpHeight = 10;
-
-    [Tooltip("How far the dodge will go")]
-    public float dodgeDistance;
-
-    [Tooltip("If the dodge key shall be spammed or not")]
-    public float dodgeCooldown;
-
-    [Tooltip("When dodging the amount of frame the player is invincible")]
-    public float iFrames;
 
 
     void Start()
