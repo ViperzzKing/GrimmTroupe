@@ -42,7 +42,7 @@ public class playerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            rb.AddForce(new Vector2(rb.linearVelocity.x, jumpHeight * Time.deltaTime));
+            rb.AddForce(new Vector2(rb.linearVelocity.x, jumpHeight * 100));
         }
     }
 
