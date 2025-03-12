@@ -15,6 +15,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [Header("Movement")]
 
     [SerializeField] private bool isFacingRight;
+    [SerializeField] private bool jumpDashTech = true;
 
     private float moveHorizontal;
 
@@ -213,6 +214,14 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     private void Jump()
     {
+        if (!jumpDashTech)
+        {
+            if (isDashing)
+            {
+                return;
+            }
+        }
+
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             //if help jumps higher
