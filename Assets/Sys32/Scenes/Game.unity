@@ -950,7 +950,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 2
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1199,13 +1199,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c576675f8ddf5b42ade63d5f435a10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
+  currentState: 1
   isFacingRight: 0
-  jumpDashTech: 1
-  jumpPower: 15
-  walkingSpeed: 10
-  gravityUp: 0
-  gravityDown: 0
+  jumpPower: 10
+  walkingSpeed: 5
+  gravityUp: 7
+  gravityDown: 17
   rb: {fileID: 278764653}
   groundCheck: {fileID: 1659914574}
   groundLayer:
@@ -1214,9 +1213,9 @@ MonoBehaviour:
   dashCollected: 1
   isDashing: 0
   dashingPower: 30
-  dashingTime: 0.2
+  dashingTime: 1
   dashingCooldown: 0.5
-  dashGravity: 1
+  dashGravity: 0.6
   noDamageTime: 0.5
   noDamage: 0
   tr: {fileID: 278764659}

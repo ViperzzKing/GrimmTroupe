@@ -15,7 +15,6 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [Header("Movement")]
 
     [SerializeField] private bool isFacingRight;
-    [SerializeField] private bool jumpDashTech = true;
 
     private float moveHorizontal;
 
@@ -52,7 +51,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     //----------States-----------------------------\\
 
-        private enum State
+    private enum State
     {
         Idle,
         Walk,
@@ -61,36 +60,43 @@ public class PlayerMovementStateMachine : MonoBehaviour
         Dash
     }
 
-    private bool changeState_Idle = false;
-    private bool changeState_Walk = false;
-    private bool changeState_Fall = false;
-    private bool changeState_Rise = false;
-
 
     //-------------------------------------------------\\
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         tr = GetComponent<TrailRenderer>();
 
-        currentState = State.Idle;
+        // Make sure our rigidbody is set up correctly
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        currentState = State.Walk;
 
         start = new Vector2(rb.transform.position.x, rb.transform.position.y);
     }
 
-    
+
     void Update()
     {
         switch (currentState)
         {
             case State.Idle:
+                // If Idle call IdleState Function .... so on
+                IdleState();
                 break;
             case State.Walk:
+                WalkState();
                 break;
             case State.Rise:
+                RiseState();
                 break;
             case State.Fall:
+                FallState();
+                break;
+            case State.Dash:
+                DashState();
                 break;
         }
 
@@ -103,11 +109,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         {
             StartCoroutine(Dash());
             StartCoroutine(NoDamage());
+            currentState = State.Dash;
         }
-
-        moveHorizontal = Input.GetAxis("Horizontal");
-
-        Jump();
     }
 
     private void FixedUpdate()
@@ -118,68 +121,167 @@ public class PlayerMovementStateMachine : MonoBehaviour
             return;
         }
 
+        Vector2 inputMovement = GetMovementFromInput();
+
         // Check if we are moving positive or negative and then run Flip()
-        if (moveHorizontal < 0 && !isFacingRight || moveHorizontal > 0 && isFacingRight)
+        if (inputMovement.x < 0 && !isFacingRight || inputMovement.x > 0 && isFacingRight)
         {
             Flip();
         }
 
-        rb.linearVelocity = new Vector2(moveHorizontal * walkingSpeed, rb.linearVelocity.y);
-
     }
 
-    //------------------------------------------------------\\
 
-    private void Idle()
+    //-------------------State Functions--------------------------\\
+
+
+    private void IdleState()
     {
-        Debug.Log("Idle State");
-        // Check if state changed
-        if (changeState_Idle)
+
+        Vector2 inputMovement = GetMovementFromInput();
+        inputMovement *= walkingSpeed;
+
+        rb.linearVelocity = inputMovement;
+
+        if (!IsGrounded())
+        {
+            // We should be falling
+            currentState = State.Fall;
+        }
+        else
+        {
+            // If we press jump
+            if (Input.GetButton("Jump"))
+            {
+                // go to our rise state
+                RiseAtSpeed(jumpPower);
+            }
+        }
+
+        // Make our linearVelocity into varibles so it can be used to check for it
+        float xVelocity = rb.linearVelocity.x;
+        float yVelocity = rb.linearVelocity.y;
+
+        // If one of these isnt 0 change our state
+        if (xVelocity != 0f || yVelocity != 0f)
         {
             currentState = State.Walk;
         }
+
+
     }
-    private void Walk()
+    private void WalkState()
     {
-        Debug.Log("Walk State");
-        // Check if change state
-        if (changeState_Walk)
+
+        // Get our direction based on what were were looking
+        Vector2 inputMovement = GetMovementFromInput();
+        inputMovement *= walkingSpeed;
+        // ^ ^ ^ Increase that using our walk speed
+
+        // Make sure were on the ground, but not building up vertical speed                        // no upper limit
+        inputMovement.y = Mathf.Clamp(rb.linearVelocity.y - gravityDown * Time.deltaTime, 0f, float.PositiveInfinity);
+
+        // Apply movement to rigidbody
+        rb.linearVelocity = inputMovement;
+
+        // Check if were supposed to be in different state
+        if (!IsGrounded())
         {
-            currentState = State.Rise;
-        }
-    }
-    private void Rise()
-    {
-        Debug.Log("Rise State");
-        // Check if change state
-        if (changeState_Rise)
-        {
+            // We should be falling
             currentState = State.Fall;
         }
-    }
-    private void Fall()
-    {
-        Debug.Log("Fall State");
-        // Check if change state
-        if (changeState_Fall)
+        else
+        {
+            // If we press jump
+            if (Input.GetButton("Jump"))
+            {
+                // go to our rise state
+                RiseAtSpeed(jumpPower);
+            }
+        }
+
+        // Make our linearVelocity into varibles so it can be used to check for it
+        float xVelocity = rb.linearVelocity.x;
+        float yVelocity = rb.linearVelocity.y;
+
+        // If both of these are 0 become idle
+        if(xVelocity == 0f && yVelocity == 0f)
         {
             currentState = State.Idle;
         }
+
+    }
+    private void RiseState()
+    {
+
+        Vector2 inputMovement = GetMovementFromInput();
+        inputMovement *= walkingSpeed;
+
+        inputMovement.y = rb.linearVelocity.y - gravityUp * Time.deltaTime;
+        // We are rising, so use upward gravity
+
+        rb.linearVelocity = inputMovement;
+
+        // If linearVelocity.y is less than 0, were falling so go to Fall State
+        if(rb.linearVelocity.y < 0f)
+        {
+            currentState = State.Fall;
+        }
+
+
+    }
+    private void FallState()
+    {
+        // Same as Rise state gravity but use downward gravity instead
+        Vector2 inputMovement = GetMovementFromInput();
+        inputMovement *= walkingSpeed;
+
+        inputMovement.y = rb.linearVelocity.y - gravityDown * Time.deltaTime;
+
+        rb.linearVelocity = inputMovement;
+
+        // After falling when we land on ground change state to Walking
+        if (IsGrounded())
+        {
+            currentState = State.Walk;
+        }
+
+
+    }
+    private void DashState()
+    {
+
+        // Maintain dash velocity during the dash state
+        if (isDashing)
+        {
+            rb.gravityScale = dashGravity;
+
+            Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingPower, 0f);
+            rb.linearVelocity = dashVelocity;
+
+
+
+        }
+        else
+        {
+            currentState = State.Fall;
+            rb.gravityScale = 1f;
+        }
     }
 
-    //--------------------------------------------\\
+
+    //------------------Enumeators--------------------------\\
+
 
     private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
-        float orginalGravity = rb.gravityScale;
         rb.gravityScale = dashGravity;
         rb.linearVelocity = new Vector2(transform.localScale.x * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         tr.emitting = false;
-        rb.gravityScale = orginalGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
@@ -193,7 +295,30 @@ public class PlayerMovementStateMachine : MonoBehaviour
         noDamage = false;
     }
 
+
     //---------------------------------------------------------------\\
+
+
+    private void RiseAtSpeed(float speed)
+    {
+
+        // Give our rigidbody upward speed
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
+
+        currentState = State.Rise;
+
+    }
+
+    private Vector2 GetMovementFromInput()
+    {
+        Vector2 inputThisFrame = new Vector2();
+        inputThisFrame.x = Input.GetAxis("Horizontal");
+        inputThisFrame.y = Input.GetAxis("Vertical");
+
+        Vector2 moveDirection = new Vector2(inputThisFrame.x * walkingSpeed, inputThisFrame.y);
+
+        return moveDirection;
+    }
 
     private bool IsGrounded()
     {
@@ -210,29 +335,6 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
         // it equals the oppisate ( ! )
         isFacingRight = !isFacingRight;
-    }
-
-    private void Jump()
-    {
-        if (!jumpDashTech)
-        {
-            if (isDashing)
-            {
-                return;
-            }
-        }
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            //if help jumps higher
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
-        }
-
-        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0f)
-        {
-            //If tapped jumps smaller
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
-        }
     }
 
     private void Restart()
