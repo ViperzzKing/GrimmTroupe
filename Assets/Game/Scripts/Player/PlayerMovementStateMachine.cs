@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR;
+
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CapsuleCollider2D))]
@@ -14,13 +14,13 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     [Header("Movement")]
 
-    [SerializeField] private bool isFacingRight;
+    [SerializeField] private bool isFacingRight = true;
 
     private float moveHorizontal;
 
-    [SerializeField] private float jumpPower = 15f;
-    [SerializeField] private float walkingSpeed = 10f;
-    [SerializeField] private float gravityUp, gravityDown;
+    [SerializeField] private float jumpPower = 20f;
+    [SerializeField] private float walkingSpeed = 7f;
+    [SerializeField] private float gravityUp = 10f, gravityDown = 20f;
 
     Vector3 start;
 
@@ -41,7 +41,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [SerializeField] private float dashingPower = 30f;
     [SerializeField] private float dashingTime = 0.2f;
     [SerializeField] private float dashingCooldown = .5f;
-    [SerializeField] private float dashGravity = 1f;
+    [SerializeField] private float dashGravity = 2f;
 
     public float noDamageTime = 0.5f;
     public bool noDamage = false;
@@ -109,6 +109,12 @@ public class PlayerMovementStateMachine : MonoBehaviour
         {
             StartCoroutine(Dash());
             StartCoroutine(NoDamage());
+            currentState = State.Dash;
+        }
+
+        if (rb.linearVelocity.x == 0f && rb.linearVelocity.y == 0f)
+        {
+            currentState = State.Idle;
         }
 
     }
@@ -138,7 +144,26 @@ public class PlayerMovementStateMachine : MonoBehaviour
     private void IdleState()
     {
 
-        
+        Vector2 inputMovement = GetMovementFromInput();
+        rb.linearVelocity = inputMovement;
+
+        if (rb.linearVelocity.x != 0f || rb.linearVelocity.y != 0f)
+        {
+            currentState = State.Walk;
+        }
+
+        if (!IsGrounded())
+        {
+            currentState = State.Fall;
+        }
+        else
+        {
+            if (Input.GetButton("Jump"))
+            {
+                RiseAtSpeed(jumpPower);
+                gravityDown = 20f;
+            }
+        }
 
     }
     private void WalkState()
@@ -208,7 +233,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
     private void DashState()
     {
 
-        
+        if (!isDashing)
+        {
+            currentState = State.Fall;
+        }
 
     }
 
