@@ -18,9 +18,12 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     private float moveHorizontal;
 
+    private float coyoteTimeCounter;
+    [SerializeField] private float coyoteTime = 0.2f;
     [SerializeField] private float jumpPower = 20f;
     [SerializeField] private float walkingSpeed = 7f;
     [SerializeField] private float gravityUp = 10f, gravityDown = 20f;
+    
 
     Vector3 start;
 
@@ -158,7 +161,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         }
         else
         {
-            if (Input.GetButton("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 RiseAtSpeed(jumpPower);
                 gravityDown = 20f;
@@ -168,6 +171,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
     }
     private void WalkState()
     {
+      
+
         // Get our input direction
         Vector2 inputMovement = GetMovementFromInput();
 
@@ -177,17 +182,22 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
         if (!IsGrounded())
         {
-            currentState = State.Fall;
+            currentState = State.Fall;           
         }
         else
         {
-            if (Input.GetButton("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 RiseAtSpeed(jumpPower);
                 gravityDown = 20f;
             }
         }
 
+        if (IsGrounded())
+        {
+            // While on ground will stay as coyoteTime
+            coyoteTimeCounter = coyoteTime;
+        }
     }
     private void RiseState()
     {
@@ -210,12 +220,15 @@ public class PlayerMovementStateMachine : MonoBehaviour
             currentState = State.Fall;
             gravityDown = 40f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
-           
         }
+
+        coyoteTimeCounter = 0f;
 
     }
     private void FallState()
     {
+        // Once off ground our coyoteTime which is TimeCounter(^^^) we minus by time (Time.deltaTime)
+        coyoteTimeCounter -= Time.deltaTime;
 
         Vector2 inputMovement = GetMovementFromInput();
 
@@ -223,6 +236,14 @@ public class PlayerMovementStateMachine : MonoBehaviour
         inputMovement.y = rb.linearVelocity.y - gravityDown * Time.deltaTime;
         rb.linearVelocity = inputMovement;
 
+        if(coyoteTimeCounter > 0f)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                RiseAtSpeed(jumpPower);
+                gravityDown = 20f;
+            }
+        }
 
         if (IsGrounded())
         {
