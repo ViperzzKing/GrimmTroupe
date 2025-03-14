@@ -209,6 +209,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         inputMovement.y = rb.linearVelocity.y - gravityUp * Time.deltaTime;
         rb.linearVelocity = inputMovement;
 
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x * 1.2f, rb.linearVelocity.y);
+
         // If linear velove.y is less than 0, we started to fall
         if(rb.linearVelocity.y < 0f)
         {
@@ -232,11 +234,13 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
         Vector2 inputMovement = GetMovementFromInput();
 
-        // We are rising so use upward gravity
+        // We are falling so use down gravity
         inputMovement.y = rb.linearVelocity.y - gravityDown * Time.deltaTime;
         rb.linearVelocity = inputMovement;
 
-        if(coyoteTimeCounter > 0f)
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x * 1.2f, rb.linearVelocity.y);
+
+        if (coyoteTimeCounter > 0f)
         {
             if (Input.GetButtonDown("Jump"))
             {
