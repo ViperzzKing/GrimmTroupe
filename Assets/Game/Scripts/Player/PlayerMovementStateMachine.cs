@@ -198,6 +198,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
             // While on ground will stay as coyoteTime
             coyoteTimeCounter = coyoteTime;
         }
+
+        
     }
     private void RiseState()
     {
