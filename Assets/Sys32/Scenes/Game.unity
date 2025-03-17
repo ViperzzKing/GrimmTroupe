@@ -1256,7 +1256,7 @@ MonoBehaviour:
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
   m_SoftZoneWidth: 0.2
-  m_SoftZoneHeight: 0.039
+  m_SoftZoneHeight: 0.192
   m_BiasX: 0
   m_BiasY: 0.015
   m_CenterOnActivate: 1
@@ -3554,6 +3554,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1655612224853611419, guid: 349d4d82cad7be940b2f889521e51ffa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.403
+      objectReference: {fileID: 0}
     - target: {fileID: 2689573309758487254, guid: 349d4d82cad7be940b2f889521e51ffa, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0

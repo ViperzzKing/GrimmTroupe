@@ -18,12 +18,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     private float moveHorizontal;
 
-    private float coyoteTimeCounter;
-    [SerializeField] private float coyoteTime = 0.2f;
     [SerializeField] private float jumpPower = 20f;
     [SerializeField] private float walkingSpeed = 7f;
     [SerializeField] private float gravityUp = 10f, gravityDown = 20f;
-    
+
 
     Vector3 start;
 
@@ -171,7 +169,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     }
     private void WalkState()
     {
-      
+
 
         // Get our input direction
         Vector2 inputMovement = GetMovementFromInput();
@@ -182,7 +180,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
         if (!IsGrounded())
         {
-            currentState = State.Fall;           
+            currentState = State.Fall;
         }
         else
         {
@@ -193,13 +191,6 @@ public class PlayerMovementStateMachine : MonoBehaviour
             }
         }
 
-        if (IsGrounded())
-        {
-            // While on ground will stay as coyoteTime
-            coyoteTimeCounter = coyoteTime;
-        }
-
-        
     }
     private void RiseState()
     {
@@ -214,7 +205,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x * 1.2f, rb.linearVelocity.y);
 
         // If linear velove.y is less than 0, we started to fall
-        if(rb.linearVelocity.y < 0f)
+        if (rb.linearVelocity.y < 0f)
         {
             currentState = State.Fall;
         }
@@ -226,13 +217,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
         }
 
-        coyoteTimeCounter = 0f;
-
     }
     private void FallState()
     {
-        // Once off ground our coyoteTime which is TimeCounter(^^^) we minus by time (Time.deltaTime)
-        coyoteTimeCounter -= Time.deltaTime;
+
 
         Vector2 inputMovement = GetMovementFromInput();
 
@@ -242,14 +230,6 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x * 1.2f, rb.linearVelocity.y);
 
-        if (coyoteTimeCounter > 0f)
-        {
-            if (Input.GetButtonDown("Jump"))
-            {
-                RiseAtSpeed(jumpPower);
-                gravityDown = 20f;
-            }
-        }
 
         if (IsGrounded())
         {
@@ -323,7 +303,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     private bool IsGrounded()
     {
         //OverlapCircle checking for groundCheck gameObject on Player, size of circle, when is the ground?
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        return Physics2D.OverlapCircle(groundCheck.position, 0.01f, groundLayer);
     }
 
     private void Flip()
