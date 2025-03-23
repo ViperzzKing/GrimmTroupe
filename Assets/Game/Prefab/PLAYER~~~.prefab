@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 8050857595132879262}
   m_Layer: 0
   m_Name: PLAYER~~~
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -590,7 +590,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   isFacingRight: 1
-  coyoteTime: 0.08
   jumpPower: 18
   walkingSpeed: 7
   gravityUp: 10

@@ -9,6 +9,7 @@ using UnityEngine;
 public class PlayerMovementStateMachine : MonoBehaviour
 {
     [SerializeField] private State currentState;
+    GameManager gm;
 
     //-------------Movement--------------------\\
 
@@ -322,4 +323,11 @@ public class PlayerMovementStateMachine : MonoBehaviour
         transform.position = start;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Coin")
+        {
+            GameManager.gm.coinCount += 1;
+        }
+    }
 }
