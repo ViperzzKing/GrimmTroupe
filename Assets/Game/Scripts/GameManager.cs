@@ -2,23 +2,26 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager gm;
 
     #region CoinVaribles
 
     public int coinCount;
+    public int coinCurrent;
 
     #endregion
 
 
     void Start()
     {
-        coinCount = 0;
+        coinCurrent = 0;
+        coinCount = coinCurrent;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        if (other.gameObject.CompareTag("Coin"))
+        {
+            coinCount += 1;
+        }
     }
 }
