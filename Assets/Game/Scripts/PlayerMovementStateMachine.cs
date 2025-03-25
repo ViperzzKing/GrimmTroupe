@@ -33,10 +33,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
     //-----------------Pounding-------------------\\
 
     public bool hasGroundPound = false;
-    [SerializeField] float poundForce = -24f;
-    [SerializeField] float poundingCooldown = 1f;
-    [SerializeField] bool canPound;
-    [SerializeField] bool isPounding;
+    [SerializeField] private float poundForce = -24f;
+    [SerializeField] private float poundingCooldown = 1f;
+    [SerializeField] private bool canPound;
+    [SerializeField] private bool isPounding;
 
 
     //-----------Dashing------------------------\\
@@ -131,7 +131,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
         {
             currentState = State.Idle;
         }
-        if (Input.GetKeyDown(KeyCode.F) && hasGroundPound) { PoundState(); }
+        if (Input.GetKeyDown(KeyCode.F) && hasGroundPound && canPound) 
+        { 
+            currentState = State.Pound; 
+        }
     }
 
     private void FixedUpdate()
@@ -299,6 +302,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         isPounding = false;
         yield return new WaitForSeconds(poundingCooldown);
         canPound = true;
+        currentState = State.Walk;
     }
 
 
