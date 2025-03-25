@@ -9,7 +9,6 @@ using UnityEngine;
 public class PlayerMovementStateMachine : MonoBehaviour
 {
     [SerializeField] private State currentState;
-    GameManager gm;
 
     //-------------Movement--------------------\\
 
@@ -36,7 +35,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     [Header("Dashing")]
 
-    [SerializeField] private bool dashCollected = true;
+    [SerializeField] bool dashCollected = true;
 
     private bool canDash = true;
     public bool isDashing;
@@ -331,4 +330,5 @@ public class PlayerMovementStateMachine : MonoBehaviour
     {
         transform.position = start;
     }
+
 }
