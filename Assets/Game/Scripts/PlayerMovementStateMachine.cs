@@ -21,8 +21,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [SerializeField] private float jumpPower = 20f;
     [SerializeField] private float walkingSpeed = 7f;
     [SerializeField] private float gravityUp = 10f, gravityDown = 20f;
-    [SerializeField] float poundForce = -24f;
-    [SerializeField] bool hasGroundPound = false;
+    
 
     Vector3 start;
 
@@ -31,11 +30,20 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
 
+    //-----------------Pounding-------------------\\
+
+    public bool hasGroundPound = false;
+    [SerializeField] float poundForce = -24f;
+    [SerializeField] float poundingCooldown = 1f;
+    [SerializeField] bool canPound;
+    [SerializeField] bool isPounding;
+
+
     //-----------Dashing------------------------\\
 
     [Header("Dashing")]
 
-    [SerializeField] bool dashCollected = true;
+    public bool dashCollected = false;
 
     private bool canDash = true;
     public bool isDashing;
@@ -102,7 +110,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
                 DashState();
                 break;
             case State.Pound:
-                PoundState();
+                StartCoroutine(PoundState());
                 break;
                 
         }
@@ -252,10 +260,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         }
 
     }
-    private void PoundState()
-    {
-        rb.linearVelocity = new Vector2(0, poundForce);
-    }
+    
 
     //------------------Enumeators--------------------------\\
 
@@ -282,6 +287,18 @@ public class PlayerMovementStateMachine : MonoBehaviour
         yield return new WaitForSeconds(noDamageTime);
         Physics2D.IgnoreLayerCollision(6, 7, false);
         noDamage = false;
+    }
+    private IEnumerator PoundState()
+    {
+        canPound = false;
+        isPounding = true;
+        rb.linearVelocity = new Vector2(0f, poundForce);
+        tr.emitting = true;
+        yield return new WaitForSeconds(0f);
+        tr.emitting = false;
+        isPounding = false;
+        yield return new WaitForSeconds(poundingCooldown);
+        canPound = true;
     }
 
 
