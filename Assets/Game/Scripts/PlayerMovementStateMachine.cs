@@ -22,7 +22,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [SerializeField] private float jumpPower = 20f;
     [SerializeField] private float walkingSpeed = 7f;
     [SerializeField] private float gravityUp = 10f, gravityDown = 20f;
-
+    [SerializeField] float poundForce = -24f;
+    [SerializeField] bool hasGroundPound = false;
 
     Vector3 start;
 
@@ -59,7 +60,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         Walk,
         Rise,
         Fall,
-        Dash
+        Dash,
+        Pound
     }
 
 
@@ -100,6 +102,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
             case State.Dash:
                 DashState();
                 break;
+            case State.Pound:
+                PoundState();
+                break;
+                
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -118,7 +124,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         {
             currentState = State.Idle;
         }
-
+        if (Input.GetKeyDown(KeyCode.F) && hasGroundPound) { PoundState(); }
     }
 
     private void FixedUpdate()
@@ -247,7 +253,10 @@ public class PlayerMovementStateMachine : MonoBehaviour
         }
 
     }
-
+    private void PoundState()
+    {
+        rb.linearVelocity = new Vector2(0, poundForce);
+    }
 
     //------------------Enumeators--------------------------\\
 
