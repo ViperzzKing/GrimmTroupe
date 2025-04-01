@@ -9,6 +9,7 @@ using UnityEngine;
 public class PlayerMovementStateMachine : MonoBehaviour
 {
     [SerializeField] private State currentState;
+    public Animator anim;
 
     //-------------Movement--------------------\\
 
@@ -79,6 +80,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         tr = GetComponent<TrailRenderer>();
+        //anim = GetComponent<Animator>();
 
         // Make sure our rigidbody is set up correctly
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -161,6 +163,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     private void IdleState()
     {
+        anim.Play("Idle");
 
         Vector2 inputMovement = GetMovementFromInput();
         rb.linearVelocity = inputMovement;
@@ -211,6 +214,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
     }
     private void RiseState()
     {
+        anim.Play("Jump");
+
         currentState = State.Rise;
 
         Vector2 inputMovement = GetMovementFromInput();
@@ -237,7 +242,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     }
     private void FallState()
     {
-
+        anim.Play("Fall");
 
         Vector2 inputMovement = GetMovementFromInput();
 
