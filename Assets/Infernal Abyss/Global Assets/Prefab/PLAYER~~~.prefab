@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 4244566582713866257}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.51499987, z: 0}
+  m_LocalPosition: {x: 0, y: 3.584, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 5990833565873310575}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.391, z: 0}
+  m_LocalPosition: {x: 0, y: -0.389, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -72,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2573986496742751679}
   - component: {fileID: 1883052425302429595}
+  - component: {fileID: 1575887096077017616}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -88,8 +89,8 @@ Transform:
   m_GameObject: {fileID: 6498872954889281026}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.18, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.391, z: 0}
+  m_LocalScale: {x: 5, y: 4.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2538946928357375827}
@@ -138,17 +139,39 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1417303716668052521, guid: 1f172bd348ff62f4eb801de64a600a0d, type: 3}
+  m_Sprite: {fileID: 4906650117247532331, guid: 58b9364aadddd634d94de123f2e0ec2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 1
+  m_DrawMode: 0
   m_Size: {x: 0.8, y: 1.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1575887096077017616
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6498872954889281026}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e17391a28cfb1114e97b56bb313a3c6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8376391768765530747
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,8 +271,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0042725205, y: 0.24470198}
-  m_Size: {x: 0.8583188, y: 1.3242304}
+  m_Offset: {x: -0.01934573, y: 0.1916623}
+  m_Size: {x: 0.7377332, y: 1.1602712}
   m_Direction: 0
 --- !u!96 &7921037433675577689
 TrailRenderer:
@@ -380,6 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
+  anim: {fileID: 1575887096077017616}
   isFacingRight: 1
   jumpPower: 18
   walkingSpeed: 7
