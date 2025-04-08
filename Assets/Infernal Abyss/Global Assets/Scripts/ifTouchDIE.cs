@@ -7,7 +7,7 @@ public class ifTouchDIE : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SceneManager.LoadScene("Infernal Abyss");
+            SceneManager.LoadScene("Tutorial");
         }
     }
 }
